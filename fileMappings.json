@@ -1,0 +1,6 @@
+[
+  {
+    "from": "bin/*",
+    "to": "/usr/local/bin/"
+  }
+]
