@@ -5,8 +5,7 @@ FROM openjdk:8-jdk
 #######################################################################
 
 RUN apt-get update && \
-    apt-get install -y jq && \
-    apt-get install -y iptables apt-transport-https ca-certificates curl software-properties-common
+    apt-get install -y jq iptables apt-transport-https ca-certificates curl software-properties-common
 
 #######################################################################
 # Configuring package repositories
@@ -27,9 +26,9 @@ RUN apt-get update && \
 # Installing kubectl
 #######################################################################
 
-ARG KUBECTL_VERSION=1.6.0
+ARG KUBECTL_VERSION=1.8.5
 ARG KUBECTL_URL=https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl
-ARG KUBECTL_SHA=c488d77cd980ca7dae03bc684e19bd6a329962e32ed7a1bc9c4d560ed433399a
+ARG KUBECTL_SHA=2663511441d44b844a25925b7d74d9326d86b8347408d21ed6efbd27a7f7109a
 
 RUN curl -fsSL ${KUBECTL_URL} -o /usr/local/bin/kubectl && \
     echo "${KUBECTL_SHA}  /usr/local/bin/kubectl" | sha256sum -c - && \
@@ -39,7 +38,7 @@ RUN curl -fsSL ${KUBECTL_URL} -o /usr/local/bin/kubectl && \
 # Configure jenkins directory
 #######################################################################
 
-ENV JENKINS_HOME=/var/jenkins_home
+ENV JENKINS_HOME=/var/jenkins
 
 RUN mkdir -p ${JENKINS_HOME}/.jenkins
 
@@ -60,4 +59,4 @@ RUN mv /tmp/mappedFiles/bin/fileMapper.sh /usr/local/bin/ && \
 # Miscellaneous configuration
 #######################################################################
 
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+ENTRYPOINT ["entrypoint.sh"]
