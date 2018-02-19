@@ -28,11 +28,23 @@ RUN apt-get update && \
 
 ARG KUBECTL_VERSION=1.8.5
 ARG KUBECTL_URL=https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl
-ARG KUBECTL_SHA=2663511441d44b844a25925b7d74d9326d86b8347408d21ed6efbd27a7f7109a
+ARG KUBECTL_SHA256=2663511441d44b844a25925b7d74d9326d86b8347408d21ed6efbd27a7f7109a
 
 RUN curl -fsSL ${KUBECTL_URL} -o /usr/local/bin/kubectl && \
-    echo "${KUBECTL_SHA}  /usr/local/bin/kubectl" | sha256sum -c - && \
+    echo "${KUBECTL_SHA256}  /usr/local/bin/kubectl" | sha256sum -c - && \
     chmod +x /usr/local/bin/kubectl
+
+#######################################################################
+# Installing helm
+#######################################################################
+
+ARG HELM_VERSION=2.7.1
+ARG HELM_URL=https://storage.googleapis.com/kubernetes-helm/helm-v${HELM_VERSION}-linux-amd64.tar.gz
+ARG HELM_SHA256_URL=${HELM_URL}.sha256
+
+RUN curl -fsSL ${HELM_URL} -o /usr/local/bin/helm && \
+    echo "$(curl -fsSL ${HELM_SHA256_URL})  /usr/local/bin/helm" | sha256sum -c - && \
+    chmod +x /usr/local/bin/helm
 
 #######################################################################
 # Configure jenkins directory
