@@ -42,9 +42,14 @@ ARG HELM_VERSION=2.7.1
 ARG HELM_URL=https://storage.googleapis.com/kubernetes-helm/helm-v${HELM_VERSION}-linux-amd64.tar.gz
 ARG HELM_SHA256_URL=${HELM_URL}.sha256
 
-RUN curl -fsSL ${HELM_URL} -o /usr/local/bin/helm && \
-    echo "$(curl -fsSL ${HELM_SHA256_URL})  /usr/local/bin/helm" | sha256sum -c - && \
-    chmod +x /usr/local/bin/helm
+WORKDIR /tmp
+
+RUN curl -fsSL ${HELM_URL} -o helm-linux-amd64.tar.gz && \
+    echo "$(curl -fsSL ${HELM_SHA256_URL})  helm-linux-amd64.tar.gz" | sha256sum -c - && \
+    tar -xvzf helm-linux-amd64.tar.gz linux-amd64/helm && \
+    mv linux-amd64/helm /usr/local/bin/
+
+WORKDIR /
 
 #######################################################################
 # Configure jenkins directory
