@@ -4,7 +4,9 @@ FROM openjdk:8-jdk-alpine
 # Installing additional packages
 #######################################################################
 
-RUN apk add --no-cache git curl jq bash docker
+RUN apk add --no-cache \
+    git curl jq bash docker \
+    btrfs-progs e2fsprogs e2fsprogs-extra iptables xfsprogs xz pigz zfs
 
 #######################################################################
 # Configure jenkins directory
@@ -13,6 +15,21 @@ RUN apk add --no-cache git curl jq bash docker
 ENV JENKINS_HOME=/var/jenkins
 
 RUN mkdir -p ${JENKINS_HOME}/.jenkins
+
+#######################################################################
+# Installing docker-in-docker
+#######################################################################
+
+RUN addgroup -S dockremap && \
+    adduser -S -G dockremap dockremap && \
+    echo "dockremap:165536:65536" >> /etc/subuid && \
+    echo "dockremap:165536:65536" >> /etc/subgid
+
+ARG DIND_COMMIT=37498f009d8bf25fbb6199e8ccd34bed84f2874b
+ARG DIND_URL=https://raw.githubusercontent.com/docker/docker/${DIND_COMMIT}/hack/dind
+
+RUN curl -fsSL ${DIND_URL} -o /usr/local/bin/dind && \
+    chmod +x /usr/local/bin/dind
 
 #######################################################################
 # Installing kubectl

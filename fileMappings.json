@@ -1,5 +1,9 @@
 [
   {
+    "from": "bin/modprobe.sh",
+    "to": "/usr/local/bin/modprobe"
+  },
+  {
     "from": "bin/*",
     "to": "/usr/local/bin/"
   }
